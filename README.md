@@ -8,7 +8,7 @@ This folder contains the full pipeline for assembling a bacterial genome from ra
 
 If you use this pipeline or its results, please cite the paper above.
 
-![Overview: raw reads → overlaps → overlap graph → Hamiltonian-path assembly → recovered sequence, via classical Miniasm or a QUBO solver](images/fig1_pipeline_overview.png)
+![Overview: raw reads → overlaps → overlap graph → Hamiltonian-path assembly → recovered sequence, via classical Miniasm or a QUBO solver](pipeline/images/fig1_pipeline_overview.png)
 
 ## 1. What this pipeline does
 
@@ -31,7 +31,7 @@ The dataset used throughout this pipeline is a real *Pseudomonas aeruginosa* gen
 
 ## 2. Pipeline stages, end to end
 
-![Data / Pre-Processing / Assembly / Post-processing / Result — the classical and quantum branches share every stage except Assembly](images/fig2_pipeline_stages.png)
+![Data / Pre-Processing / Assembly / Post-processing / Result — the classical and quantum branches share every stage except Assembly](pipeline/images/fig2_pipeline_stages.png)
 
 The pipeline has five stages. The first two columns below are common to both the classical (Unicycler) and quantum (QUBO/HADOF) routes; the middle "Assembly" step is where they diverge; the last two columns are common again.
 
@@ -129,9 +129,9 @@ Benchmarked against the Unicycler classical baseline (509 nodes retained, 7,139,
 
 Across 5,000 sampled solutions per solver, 398 SA samples, 48 ideal-HADOF samples, and 2 real-hardware samples achieved >95% genome fraction with a duplication ratio below 1.05 — with 106 SA samples and 3 ideal-HADOF samples reconstructing the reference genome exactly (100% fraction, 1.0 duplication ratio). The paper's key finding is that the raw QUBO objective value is a poor proxy for assembly quality on its own — the number of nodes retained after post-processing correlates far more strongly with genome fraction (see the paper's Section 4.4 for the full analysis).
 
-![Sampled-solution distributions by genome fraction and duplication ratio, for SA, ideal HADOF+QAOA, and ibm_torino — the ideal target is 100% genome fraction at a duplication ratio of 1.0](images/fig6_genome_fraction_duplication_heatmaps.png)
+![Sampled-solution distributions by genome fraction and duplication ratio, for SA, ideal HADOF+QAOA, and ibm_torino — the ideal target is 100% genome fraction at a duplication ratio of 1.0](pipeline/images/fig6_genome_fraction_duplication_heatmaps.png)
 
-![Joint distributions relating internal QUBO optimisation metrics (score, retained node count, assembly length) to the QUAST assembly-quality metrics (genome fraction, duplication ratio) — raw QUBO score alone is a poor proxy for assembly quality, but retained node count correlates strongly with genome fraction](images/fig7_qubo_metrics_vs_assembly_quality.png)
+![Joint distributions relating internal QUBO optimisation metrics (score, retained node count, assembly length) to the QUAST assembly-quality metrics (genome fraction, duplication ratio) — raw QUBO score alone is a poor proxy for assembly quality, but retained node count correlates strongly with genome fraction](pipeline/images/fig7_qubo_metrics_vs_assembly_quality.png)
 
 ## 7. Running the pipeline
 
