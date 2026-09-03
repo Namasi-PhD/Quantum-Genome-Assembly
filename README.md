@@ -135,6 +135,19 @@ Across 5,000 sampled solutions per solver, 398 SA samples, 48 ideal-HADOF sample
 
 ## 7. Running the pipeline
 
+### 7.1 Environment setup
+
+The quantum stack this pipeline depends on (Qiskit, Qiskit Aer/Algorithms/Optimization, OpenQAOA, PennyLane) is very version-sensitive — installing these packages without pinned versions is a common source of dependency conflicts and import errors. [`setup-qaoa.sh`](../setup-qaoa.sh), in the repository root, creates a dedicated conda environment with a known-working set of pinned versions:
+
+```bash
+bash ../setup-qaoa.sh
+conda activate qaoa-setup
+```
+
+This installs Python 3.9.6 plus `qiskit==0.45.2`, `qiskit-aer==0.15.1`, `qiskit-algorithms==0.3.1`, `qiskit-optimization==0.6.1`, `openqaoa-braket`/`openqaoa-core`/`openqaoa-qiskit==0.2.6`, `cachetools==5.5.0`, and `pennylane==0.38.0`. Run it once before the steps below.
+
+### 7.2 Running it
+
 1. Unzip the large data files listed in [section 4](#4-data-files-and-why-some-are-missing) in place.
 2. Download `ERR13577262.fastq` from ENA/SRA and place it alongside the other files in this folder.
 3. Open `GAP.ipynb` to run the full pipeline interactively (QUBO construction → HADOF/SA solving → post-processing → evaluation), or
