@@ -140,4 +140,4 @@ Across 5,000 sampled solutions per solver, 398 SA samples, 48 ideal-HADOF sample
 3. Open `GAP.ipynb` to run the full pipeline interactively (QUBO construction → HADOF/SA solving → post-processing → evaluation), or
 4. Run `bash run_pipeline_copy.sh` to (re-)process a batch of already-sampled solutions (from a `results-*.pkl` file) through cleanup, unitigging, polishing, circular trimming, and QUAST evaluation.
 
-Requires `gfatools`, `minimap2`, `racon`, and `quast.py` on the `PATH`, plus the Python dependencies used by `HADOFv2/` (see that folder).
+Requires `Unicycler`, `gfatools`, `minimap2`, `racon`, and `quast.py` on the `PATH`, plus the Python dependencies used by `HADOFv2/` (see that folder).
