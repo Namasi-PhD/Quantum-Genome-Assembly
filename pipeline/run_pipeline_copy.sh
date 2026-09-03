@@ -3,7 +3,7 @@
 # Exit on error
 set -e
 RESULTS_PKL="results-SA.pkl"
-for SAMPLE in {0..1}
+for SAMPLE in {0..4999}
 do
     /usr/bin/python3 GAP_copy.py ERR13577262_raw_string.gfa output load "$RESULTS_PKL" 1 $SAMPLE
     echo "Processing $SAMPLE"
