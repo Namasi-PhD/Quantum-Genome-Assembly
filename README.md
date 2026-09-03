@@ -101,7 +101,7 @@ Some of the files this pipeline needs are too large for a normal GitHub upload a
 | `results-ideal-HADOF.pkl` (`.zip`) | 336 MB | 5,000 sampled solutions from HADOF+QAOA, ideal noise-free simulation |
 | `results-real-device.pkl` (`.zip`) | 336 MB | Sampled solutions from HADOF+QAOA on real `ibm_torino` hardware |
 
-**`ERR13577262.fastq`**, the raw ONT read set (~464 MB, 21,969 reads), is **not included in this repository at all**. It is public sequencing data, archived under run accession [`ERR13577262`](https://www.ebi.ac.uk/ena/browser/view/ERR13577262) on the European Nucleotide Archive (which mirrors/shares accessions with NCBI's SRA) — download it from there rather than from this repo. *(Note: I wasn't able to independently re-verify the exact study/BioProject behind this accession while writing this README — the paper doesn't cite it with a numbered reference either — so double-check the ENA page reflects a *Pseudomonas aeruginosa* run before relying on it.)*
+**`ERR13577262.fastq`**, the raw ONT read set (~464 MB, 21,969 reads), is **not included in this repository at all**. It is public sequencing data, archived under run accession [`ERR13577262`](https://www.ebi.ac.uk/ena/browser/view/ERR13577262) on the European Nucleotide Archive (which mirrors/shares accessions with NCBI's SRA) — download it from there rather than from this repo. 
 
 `sequences/assembly.fasta` is the Unicycler reference assembly (7,139,404 bp) used as the ground truth for QUAST evaluation throughout.
 
