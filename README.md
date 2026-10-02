@@ -76,7 +76,7 @@ Takes the cleaned, linear GFA and walks it end to end, stitching each pair of ov
 
 ### 3.5 Polishing (inside `run_pipeline_copy.sh`)
 
-The raw unitig sequence inherits the ~10–15% per-base error rate of the original ONT reads. `run_pipeline_copy.sh` polishes it with three rounds of `minimap2` (re-align the raw reads to the current draft) + `racon` (consensus correction), exactly mirroring the polishing Unicycler itself performs.
+The raw unitig sequence inherits the ~10–15% per-base error rate of the original ONT reads. `run_pipeline_copy.sh` polishes it with four rounds of `minimap2` (re-align the raw reads to the current draft) + `racon` (consensus correction), exactly mirroring the polishing Unicycler itself performs.
 
 ### 3.6 `trim_terminal_overlap_reference_free.py` — closing the circular genome
 
@@ -88,7 +88,7 @@ Each trimmed, polished sample assembly is evaluated against the Unicycler refere
 
 ### 3.8 `run_pipeline_copy.sh` — the driver
 
-Ties sections 3.3–3.7 together for a batch of samples: for each sample index, it calls `GAP_copy.py` to reconstruct and clean that sample's graph, converts it with `gfatools`, unitigs it (`gfa2unitigs.py`), polishes it (`minimap2` + `racon` x3), circular-trims it (`trim_terminal_overlap_reference_free.py`), evaluates it (`quast.py`), and files the QUAST report into `results_columns/`. It finishes by calling `merge_reports.py` to produce a combined report across all processed samples. It expects to be run from this `pipeline/` directory, with the raw reads (`ERR13577262.fastq`) and string graph (`ERR13577262_raw_string.gfa`) present alongside it, and a `results-*.pkl` file of sampled QUBO solutions to draw from.
+Ties sections 3.3–3.7 together for a batch of samples: for each sample index, it calls `GAP_copy.py` to reconstruct and clean that sample's graph, converts it with `gfatools`, unitigs it (`gfa2unitigs.py`), polishes it (`minimap2` + `racon` x4), circular-trims it (`trim_terminal_overlap_reference_free.py`), evaluates it (`quast.py`), and files the QUAST report into `results_columns/`. It finishes by calling `merge_reports.py` to produce a combined report across all processed samples. It expects to be run from this `pipeline/` directory, with the raw reads (`ERR13577262.fastq`) and string graph (`ERR13577262_raw_string.gfa`) present alongside it, and a `results-*.pkl` file of sampled QUBO solutions to draw from.
 
 ## 4. Data files, and why some are missing
 
