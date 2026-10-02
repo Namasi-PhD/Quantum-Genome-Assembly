@@ -34,7 +34,7 @@ do
 
     # rm -r fastas2 fastas3 overlaps
         rm ${SAMPLE}_polished1.fasta ${SAMPLE}_polished2.fasta ${SAMPLE}_polished3.fasta ${SAMPLE}_merged_unitigs.fa ${SAMPLE}_HADOF.gfa ${SAMPLE}_overlaps.paf output_${SAMPLE}.gfa
-        quast.py -r assembly.fasta ${SAMPLE}_polished_assembly.fasta -o quast_${SAMPLE}
+        quast.py -r sequences/assembly.fasta sequences/${SAMPLE}_final_ref_free_terminal_trimmed.fa -o quast_${SAMPLE}
         rm ${SAMPLE}_polished_assembly.fasta
         cp "quast_${SAMPLE}/report.tsv" "results_columns/${SAMPLE}.tsv"
         rm -rf "quast_${SAMPLE}"
