@@ -2,7 +2,7 @@
 
 This folder contains the full pipeline for assembling a bacterial genome from raw long-read sequencing data, using a quantum (and quantum-inspired) optimisation step in place of the heuristic graph-cleanup normally performed by classical assemblers. The approach, the QUBO formulation, and the results below are described in detail in the accompanying paper:
 
-> **Scaling Quantum Optimisation Beyond Hardware Limits for Real-World Scientific Workloads: Genome Assembly on Current Quantum Hardware**
+> **Quantum Genome Assembly of a Complete Bacterial Chromosome from Real Sequencing Data on NISQ Hardware**
 > Namasi G Sankar, Georgios Miliotis, Simon Caton
 > School of Computer Science & Centre for Quantum Engineering, Science and Technology, University College Dublin; Antimicrobial Resistance and Microbial Ecology Group, School of Medicine, University of Galway.
 
@@ -27,7 +27,7 @@ Step 3 is the computationally hard part: it is NP-hard in general, and classical
 
 HADOF exists because the QUBO for a realistic assembly graph has far more variables (2,313, for the genome assembled here) than current quantum devices have usable qubits. HADOF decomposes the global QUBO into a sequence of small (here, 5-qubit) sub-problems, solves each on the quantum device, and iteratively merges the results into a global solution — see the "HADOFv2 module" section below.
 
-The dataset used throughout this pipeline is a real *Pseudomonas aeruginosa* genome (7.1 Mbp, circular bacterial chromosome), sequenced with ONT long reads (21,969 reads, accession `ERR13577262`, publicly available via ENA/SRA). This is, per the paper, the largest genome assembled on real quantum hardware to date — roughly 1000x larger than prior quantum genome-assembly demonstrations.
+The dataset used throughout this pipeline is a real *Pseudomonas aeruginosa* genome (7.1 Mbp, circular bacterial chromosome), sequenced with ONT long reads (21,969 reads; ENA sample ERS20900483, run ERR13577262, study PRJEB77420). To our knowledge, this is the first complete genome assembled from real sequencing data on quantum hardware, and it is over 100 times longer than the sequences assembled in previous quantum hardware studies.
 
 ## 2. Pipeline stages, end to end
 
@@ -80,7 +80,7 @@ The raw unitig sequence inherits the ~10–15% per-base error rate of the origin
 
 ### 3.6 `trim_terminal_overlap_reference_free.py` — closing the circular genome
 
-Bacterial chromosomes such as *P. aeruginosa*'s are circular; a linear assembly of a circular genome typically ends up with the start of the sequence duplicated at the end. This script detects and removes that redundancy **without needing a reference genome**: it extracts the first and last 700 kb of the polished assembly, aligns them against each other with `minimap2` (`asm5` preset), and — if it finds a terminal overlap of at least 10 kb with ≥99% identity within 2 kb of either end — trims the longer duplicated copy. This matches the reference-free circularisation procedure described in the paper (Section 3.4.2).
+Bacterial chromosomes such as *P. aeruginosa*'s are circular; a linear assembly of a circular genome typically ends up with the start of the sequence duplicated at the end. This script detects and removes that redundancy **without needing a reference genome**: it extracts the first and last 700 kb of the polished assembly, aligns them against each other with `minimap2` (`asm5` preset), and — if it finds a terminal overlap of at least 10 kb with ≥99% identity within 2 kb of either end — trims the longer duplicated copy. This matches the reference-free circularisation procedure described in the paper (Methods, "QUBO Pipeline Post-Processing Steps").
 
 ### 3.7 Evaluation and `merge_reports.py`
 
@@ -109,7 +109,7 @@ Some of the files this pipeline needs are too large for a normal GitHub upload a
 
 `HADOFv2/` (a sibling folder to `pipeline/`) contains the actual optimisation engine that `GAP.ipynb` calls into:
 
-- **`HADOFrun.py`** — top-level entry point (`main()`), which drives the sweep-by-sweep decomposition loop described in the paper (Figure 3): at each iteration, a set of small variable subsets is chosen, a sub-QUBO is built for each using the current global probability estimate for every inactive variable, each sub-QUBO is optimised on a k-qubit circuit, and the results are merged back into the global solution.
+- **`HADOFrun.py`** — top-level entry point (`main()`), which drives the sweep-by-sweep decomposition loop described in the paper (Figure 7): at each iteration, a set of small variable subsets is chosen, a sub-QUBO is built for each using the current global probability estimate for every inactive variable, each sub-QUBO is optimised on a k-qubit circuit, and the results are merged back into the global solution.
 - **`HADOF/sequentialHADOF.py`** / **`HADOF/parallelHADOF.py`** — the sequential (Gauss-Seidel-style, immediate-update) and parallel (Jacobi-style, batch-update) variants of the decomposition loop.
 - **`problem_solver/`** — the actual quantum/annealing back ends: `QAOAt.py` (trotterised QAOA, the one used for all results in the paper), `QAOAc.py` (continuous-parameter QAOA), `QAOAt_qiskit.py` (Qiskit-backed variant, used for the real `ibm_torino` runs), and `falqon.py` (FALQON, an alternative variational initialisation strategy).
 - **`problem_generator/`** — synthetic test problems (Knapsack, TSP, generic QUBO-dict loading) used for validating HADOF independently of the genome-assembly use case.
@@ -127,7 +127,7 @@ Benchmarked against the Unicycler classical baseline (509 nodes retained, 7,139,
 | HADOF + QAOA, ideal simulation (best sample) | 263 | 7,139,426 bp | 100% | 1.0 |
 | HADOF + QAOA, real `ibm_torino` hardware (best sample) | 206 | 7,094,589 bp | **99.348%** | 1.0 |
 
-Across 5,000 sampled solutions per solver, 398 SA samples, 48 ideal-HADOF samples, and 2 real-hardware samples achieved >95% genome fraction with a duplication ratio below 1.05 — with 106 SA samples and 3 ideal-HADOF samples reconstructing the reference genome exactly (100% fraction, 1.0 duplication ratio). The paper's key finding is that the raw QUBO objective value is a poor proxy for assembly quality on its own — the number of nodes retained after post-processing correlates far more strongly with genome fraction (see the paper's Section 4.4 for the full analysis).
+Across 5,000 sampled solutions per solver, 398 SA samples, 48 ideal-HADOF samples, and 2 real-hardware samples achieved >95% genome fraction with a duplication ratio below 1.05 — with 106 SA samples and 3 ideal-HADOF samples reconstructing the reference genome exactly (100% fraction, 1.0 duplication ratio). The paper's key finding is that the raw QUBO objective value is a poor proxy for assembly quality on its own — the number of nodes retained after post-processing correlates far more strongly with genome fraction (see the Results subsection "Structural metrics, rather than the QUBO score, track assembly quality").
 
 ![Sampled-solution distributions by genome fraction and duplication ratio, for SA, ideal HADOF+QAOA, and ibm_torino — the ideal target is 100% genome fraction at a duplication ratio of 1.0](pipeline/images/fig6_genome_fraction_duplication_heatmaps.png)
 
