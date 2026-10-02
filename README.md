@@ -25,7 +25,7 @@ Step 3 is the computationally hard part: it is NP-hard in general, and classical
 - **HADOF (Hamiltonian Auto Decomposition Optimisation Framework)** running QAOA (Quantum Approximate Optimisation Algorithm) in an ideal, noise-free simulation, and
 - **HADOF running QAOA on real quantum hardware** (IBM's `ibm_torino`, a 133-qubit gate-based processor).
 
-HADOF exists because the QUBO for a realistic assembly graph has far more variables (2,313, for the genome assembled here) than current quantum devices have usable qubits. HADOF decomposes the global QUBO into a sequence of small (here, 5-qubit) sub-problems, solves each on the quantum device, and iteratively merges the results into a global solution — see the "HADOFv2 module" section below.
+HADOF exists because the QUBO for a realistic assembly graph has far more variables (2,313, for the genome assembled here) than current quantum devices have usable qubits. HADOF decomposes the global QUBO into a sequence of small (here, 3-qubit) sub-problems, solves each on the quantum device, and iteratively merges the results into a global solution — see the "HADOFv2 module" section below.
 
 The dataset used throughout this pipeline is a real *Pseudomonas aeruginosa* genome (7.1 Mbp, circular bacterial chromosome), sequenced with ONT long reads (21,969 reads; ENA sample ERS20900483, run ERR13577262, study PRJEB77420). To our knowledge, this is the first complete genome assembled from real sequencing data on quantum hardware, and it is over 100 times longer than the sequences assembled in previous quantum hardware studies.
 
@@ -114,7 +114,7 @@ Some of the files this pipeline needs are too large for a normal GitHub upload a
 - **`problem_solver/`** — the actual quantum/annealing back ends: `QAOAt.py` (trotterised QAOA, the one used for all results in the paper), `QAOAc.py` (continuous-parameter QAOA), `QAOAt_qiskit.py` (Qiskit-backed variant, used for the real `ibm_torino` runs), and `falqon.py` (FALQON, an alternative variational initialisation strategy).
 - **`problem_generator/`** — synthetic test problems (Knapsack, TSP, generic QUBO-dict loading) used for validating HADOF independently of the genome-assembly use case.
 
-For the headline results in the paper, HADOF was configured with 5-qubit sub-circuits, `QAOAt` as the optimiser, and an "ordered" (contiguous block) selection strategy — 462 five-qubit circuits plus one 3-qubit circuit to cover all 2,313 QUBO variables, against a device with 133 physical qubits.
+For the headline results in the paper, HADOF was configured with 3-qubit sub-circuits, `QAOAt` as the optimiser, and an "ordered" (contiguous block) selection strategy — 462 five-qubit circuits plus one 3-qubit circuit to cover all 2,313 QUBO variables, against a device with 133 physical qubits.
 
 ## 6. Headline results (from the paper)
 
